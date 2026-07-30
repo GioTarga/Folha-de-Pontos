@@ -27,9 +27,9 @@
 <body>
 <div id="root"></div>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
 <script type="text/plain" id="app-source">
 const { useState, useEffect, useRef, useCallback } = React;
@@ -648,10 +648,17 @@ root.render(<CartaoPontoTracker />);
 </script>
 <script>
   var srcCode = document.getElementById('app-source').textContent;
-  var output = Babel.transform(srcCode, { presets: [['react', { runtime: 'classic' }]] }).code;
-  var runScript = document.createElement('script');
-  runScript.text = output;
-  document.body.appendChild(runScript);
+  if (typeof Babel === 'undefined' || typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+    document.getElementById('root').innerHTML =
+      '<div style="max-width:600px;margin:60px auto;padding:20px;font-family:sans-serif;border:1px solid #A63A2C;border-radius:8px;color:#A63A2C;">' +
+      '<strong>Não consegui carregar os scripts do React/Babel.</strong><br/>Verifique sua conexão com a internet e recarregue a página. Se o problema continuar, pode ser bloqueio de rede aos domínios cdnjs.cloudflare.com.' +
+      '</div>';
+  } else {
+    var output = Babel.transform(srcCode, { presets: [['react', { runtime: 'classic' }]] }).code;
+    var runScript = document.createElement('script');
+    runScript.text = output;
+    document.body.appendChild(runScript);
+  }
 </script>
 </body>
 </html>
